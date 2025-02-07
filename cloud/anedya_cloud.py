@@ -116,7 +116,7 @@ def get_latestData(param_variable_identifier: str, nodeId: str, apiKey: str) -> 
             # print(data, timestamp)
             return {"isSuccess": True, "data": data, "timestamp": timestamp}
     else:
-        st.error("Get LatestData API failed")
+        st.error(f"Error: {response_message}")
         return {"isSuccess": False, "data": None, "timestamp": None}
 
 

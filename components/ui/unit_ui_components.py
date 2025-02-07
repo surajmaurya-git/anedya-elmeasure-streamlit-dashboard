@@ -104,7 +104,7 @@ def gauge_section(node_client=None):
                 timestamp=data.get("timestamp")
                 hr_timestamp = datetime.fromtimestamp(timestamp, indian_time_zone)
                 fm_hr_timestamp=hr_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z')
-                st.text(f"Last Updated: {fm_hr_timestamp}")
+                st.markdown(f"**Last Updated:** {fm_hr_timestamp}")
                 value=data.get("data")
                 sv.gauge(value,"Frequency",cWidth=True,gSize="MED",sFix=VARIABLE["unit"],arTop=int(VARIABLE["top_range"]),arBot=int(VARIABLE["bottom_range"]))
             else:
@@ -116,7 +116,7 @@ def gauge_section(node_client=None):
                 timestamp=data.get("timestamp")
                 hr_timestamp = datetime.fromtimestamp(timestamp, indian_time_zone)
                 fm_hr_timestamp=hr_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z')
-                st.text(f"Last Updated: {fm_hr_timestamp}")
+                st.markdown(f"**Last Updated:**  {fm_hr_timestamp}")
                 value=data.get("data")
                 arTop=int(VARIABLE["top_range"])
                 arBot=int(VARIABLE["bottom_range"])
@@ -130,7 +130,7 @@ def gauge_section(node_client=None):
                 timestamp=data.get("timestamp")
                 hr_timestamp = datetime.fromtimestamp(timestamp, indian_time_zone)
                 fm_hr_timestamp=hr_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z')
-                st.text(f"Last Updated: {fm_hr_timestamp}")
+                st.markdown(f"**Last Updated:**  {fm_hr_timestamp}")
                 value=data.get("data")
                 arTop=int(VARIABLE["top_range"])
                 arBot=int(VARIABLE["bottom_range"])
@@ -272,13 +272,13 @@ def map_section(node_client=None):
     with container:
         st.subheader(body="Device Location", anchor=False)
         res=node_client.get_latestData("location")
-        if res.get("isSuccess") is True and res.get("data") is not None:
+        if res.get("data") is not None:
             location=res.get("data")
             last_updated=res.get("timestamp")
             indian_time_zone = pytz.timezone('Asia/Kolkata')   # set time zone
             hr_timestamp = datetime.fromtimestamp(last_updated, indian_time_zone)
             fm_hr_timestamp=hr_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z')
-            st.text(f"Last Updated: {fm_hr_timestamp}")
+            st.markdown(f"**Last Updated:**  {fm_hr_timestamp}")
 
             latitude=location.get("lat")
             longitude=location.get("long")  
@@ -286,7 +286,7 @@ def map_section(node_client=None):
                 {"latitude": [latitude], "longitude": [longitude]}
             )
             st.map(
-                locationData, zoom=14, color="#0044ff", size=25, use_container_width=True
+                locationData, zoom=13, color="#0044ff", size=50, use_container_width=True
             )
         else:
             st.error("No Data Available")

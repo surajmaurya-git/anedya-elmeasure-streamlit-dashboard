@@ -8,7 +8,6 @@ from components.ui.unit_ui_components import graph_section
 from components.ui.unit_ui_components import map_section
 from cloud.anedya_cloud import Anedya
 
-import json
 import os
 
 
@@ -25,8 +24,6 @@ def draw_unit_1_dashboard():
 
     anedya = Anedya()
     NODE_ID = st.session_state.nodesId[f"node_{NODE_NUMBER}"]
-    VARIABLES = st.session_state.variables
-
     node = anedya.new_node(st.session_state.anedya_client, nodeId=NODE_ID)
     device_status_res = node.get_deviceStatus()
     unit_header(
@@ -39,7 +36,7 @@ def draw_unit_1_dashboard():
     # cards_section(vitals_value)
     # controllers_section(node)
     graph_section(node)
-    # map_section(node)
+    map_section(node)
 
 
 draw_unit_1_dashboard()
