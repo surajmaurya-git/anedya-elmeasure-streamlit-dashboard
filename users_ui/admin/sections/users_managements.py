@@ -129,11 +129,14 @@ def list_users_ui():
     container = st.container(border=True)
     list_users = st.session_state.firestore_client.collection("users").stream()
     user_dict = {user.id: user.to_dict() for user in list_users}
+    # st.write(user_dict)
 
     formatted_data = {
         "Name": [user["name"] for user in user_dict.values()],
+        "Role": [user["role"] for user in user_dict.values()],
         "Email": [user["email"] for user in user_dict.values()],
         "Permissions": [", ".join(user["permissions"]) for user in user_dict.values()],
+        "Variables Access": [", ".join(user["variables_access"]) for user in user_dict.values()],
     }
 
     data_df = pd.DataFrame(formatted_data)
