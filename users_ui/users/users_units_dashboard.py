@@ -18,8 +18,10 @@ def drawUsersDashboard():
         f"{NODES_NAME}s": Nodes_pages
     }
     st.logo(f"{current_dir}/images/logo.png",size="large")
-    st.sidebar.subheader("Omniwot ")
-    st.sidebar.markdown("Empowering Smart Automation with AI-Driven Wireless IoT Solutions")
+    st.sidebar.subheader("Energy Monitoring Dashboard")
+    st.sidebar.markdown(
+        "Anedya energy monitoring dashboard with Elmeasure(lg64xx)."
+    )
     if len(st.session_state.user_permissions) > 0:
         pg = st.navigation(pages)
         pg.run()

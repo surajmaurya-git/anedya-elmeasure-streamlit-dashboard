@@ -43,8 +43,8 @@ def drawAdminDashboard():
     }
     pg = st.navigation(pages)
     st.logo(f"{current_dir}/images/logo.png", size="large")
-    st.sidebar.subheader("Omniwot ")
+    st.sidebar.subheader("Energy Monitoring Dashboard")
     st.sidebar.markdown(
-        "Empowering Smart Automation with AI-Driven Wireless IoT Solutions"
+        "Anedya energy monitoring dashboard with Elmeasure(lg64xx)."
     )
     pg.run()

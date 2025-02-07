@@ -38,13 +38,13 @@ def unit_header(title, des=None, node_client=None,device_status_res=None):
     if des is not None:
         st.markdown(des)
 
-def unit_details(data=None):
+def unit_details(data):
     # res=node_client.get_valueStore(key="DEVICEINFO")
     # st.write(res)
     # res_json=json.loads(res)
     # st.write(data)
-    st.markdown(f"**MAC ID:**  ")
-    st.markdown(f"**Firmware:**  ")
+    st.markdown(f"**Node ID:** {data}")
+    # st.markdown(f"**Firmware:**  ")
     # st.text(f"IMEI No.: {data.get('imei_id')}")
 
 
@@ -89,31 +89,52 @@ def cards_section(data:dict=None):
 
 
 
-def gauge_section(data:list=None):
+def gauge_section(node_client=None):
     container = st.container(border=True,height=300)
     VARIABLES= st.session_state.variables
     with container:
-        if data[4]!=0:
-            indian_time_zone = pytz.timezone('Asia/Kolkata')   # set time zone
-            hr_timestamp = datetime.fromtimestamp(data[4], indian_time_zone)
-            fm_hr_timestamp=hr_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z')
-        else:
-            fm_hr_timestamp="0"
-        st.text(f"Last Updated: {fm_hr_timestamp}")
-        r1_guage_cols = st.columns([1,1,1,], gap="small")
 
+        indian_time_zone = pytz.timezone('Asia/Kolkata')   # set time zone
+        r1_guage_cols = st.columns([1,1,1], gap="small")
+        
         with r1_guage_cols[0]:
-            if data[0]!=-1:
-                arTop=int(VARIABLES["variable_1"].get("top_range"))
-                arBot=int(VARIABLES["variable_1"].get("bottom_range"))
-                sv.gauge(data[0],"Phloton Unit Battery SoC",cWidth=True,gSize="MED",sFix=" %",arTop=arTop,arBot=arBot)
+            VARIABLE=VARIABLES["variable_1"]
+            data=node_client.get_latestData(VARIABLE["identifier"])
+            if data.get("data") != None:
+                timestamp=data.get("timestamp")
+                hr_timestamp = datetime.fromtimestamp(timestamp, indian_time_zone)
+                fm_hr_timestamp=hr_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z')
+                st.text(f"Last Updated: {fm_hr_timestamp}")
+                value=data.get("data")
+                sv.gauge(value,"Frequency",cWidth=True,gSize="MED",sFix=VARIABLE["unit"],arTop=int(VARIABLE["top_range"]),arBot=int(VARIABLE["bottom_range"]))
             else:
                 st.error("No Data Available")
         with r1_guage_cols[1]:
-            if data[1]!=-1:
-                arTop=int(VARIABLES["variable_2"].get("top_range"))
-                arBot=int(VARIABLES["variable_2"].get("bottom_range"))
-                sv.gauge(data[2],"Flask Average Temperature",cWidth=True,gSize="MED",sFix="°C",arTop=arTop,arBot=arBot)
+            VARIABLE=VARIABLES["variable_2"]
+            data=node_client.get_latestData(VARIABLE["identifier"])
+            if data.get("data") != None:
+                timestamp=data.get("timestamp")
+                hr_timestamp = datetime.fromtimestamp(timestamp, indian_time_zone)
+                fm_hr_timestamp=hr_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z')
+                st.text(f"Last Updated: {fm_hr_timestamp}")
+                value=data.get("data")
+                arTop=int(VARIABLE["top_range"])
+                arBot=int(VARIABLE["bottom_range"])
+                sv.gauge(value,VARIABLE["name"],cWidth=True,gSize="MED",sFix="V",arTop=arTop,arBot=arBot)
+            else:
+                st.error("No Data Available")
+        with r1_guage_cols[2]:
+            VARIABLE=VARIABLES["variable_5"]
+            data=node_client.get_latestData(VARIABLE["identifier"])
+            if data.get("data") != None:
+                timestamp=data.get("timestamp")
+                hr_timestamp = datetime.fromtimestamp(timestamp, indian_time_zone)
+                fm_hr_timestamp=hr_timestamp.strftime('%Y-%m-%d %H:%M:%S %Z')
+                st.text(f"Last Updated: {fm_hr_timestamp}")
+                value=data.get("data")
+                arTop=int(VARIABLE["top_range"])
+                arBot=int(VARIABLE["bottom_range"])
+                sv.gauge(value,VARIABLE["name"],cWidth=True,gSize="MED",sFix=VARIABLE["unit"],arTop=arTop,arBot=arBot)
             else:
                 st.error("No Data Available")
 
@@ -217,13 +238,15 @@ def graph_section(node_client=None):
         currentTime = int(time.time())    #to means recent time
         pastHour_Time = int(currentTime - 86400)
 
-        options:list=None
+        VARIABLES=st.session_state.variables
+        options:list=[]
         if st.session_state.view_role == "user":
             options=["Battery Voltage","Unit Battery SoC","Flask Average Temperature","Ambient Temperature"]
         else:
-            options=["Battery Voltage","Unit Battery SoC","Flask Average Temperature", "Ambient Temperature","TEC Current","HS FAN Current","CS FAN Current","Flask Top Temperature", "Heat Sink Temperature","Cold Sink Temperature","Flask Down Temperature","TEC Status","HS FAN Status","CS FAN Status", "TEC DutyCycle","HS FAN DutyCycle","CS FAN DutyCycle"]
+            for key, variable in VARIABLES.items():
+                variable_name = variable.get('name')
+                options.append(variable_name)
 
-        VARIABLES=st.session_state.variables
         # st.write(VARIABLES)
 
         multislect_cols = st.columns([0.7,1], gap="small")
@@ -232,9 +255,9 @@ def graph_section(node_client=None):
 
 
         for i in range(0, len(show_charts), 3):
-            r2_graph_cols = st.columns([1, 1, 1], gap="small")
+            graph_cols = st.columns([1, 1, 1], gap="small")
             for j, chart in enumerate(show_charts[i:i+3]):
-                with r2_graph_cols[j]:
+                with graph_cols[j]:
                     VARIABLE_KEY = get_variable_key_by_name(VARIABLES, chart)
                     if VARIABLE_KEY is not None:
                         VARIABLE = VARIABLES.get(VARIABLE_KEY)

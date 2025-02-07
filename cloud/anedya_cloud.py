@@ -107,7 +107,7 @@ def get_latestData(param_variable_identifier: str, nodeId: str, apiKey: str) -> 
         if data == {} or data == None:
             print("No Data found")
             # st.toast("No Data found")
-            return {"isSuccess": False, "data": None, "timestamp": None}
+            return {"isSuccess": True, "data": None, "timestamp": None}
         else:
             data = data[nodeId].get("value")
             timestamp = (
@@ -116,7 +116,7 @@ def get_latestData(param_variable_identifier: str, nodeId: str, apiKey: str) -> 
             # print(data, timestamp)
             return {"isSuccess": True, "data": data, "timestamp": timestamp}
     else:
-        # st.error("Get LatestData API failed")
+        st.error("Get LatestData API failed")
         return {"isSuccess": False, "data": None, "timestamp": None}
 
 

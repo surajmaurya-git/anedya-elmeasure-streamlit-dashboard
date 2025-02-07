@@ -27,7 +27,6 @@ def draw_unit_1_dashboard():
     NODE_ID = st.session_state.nodesId[f"node_{NODE_NUMBER}"]
     VARIABLES = st.session_state.variables
 
-    node = None
     node = anedya.new_node(st.session_state.anedya_client, nodeId=NODE_ID)
     device_status_res = node.get_deviceStatus()
     unit_header(
@@ -35,33 +34,10 @@ def draw_unit_1_dashboard():
         node_client=node,
         device_status_res=device_status_res,
     )
-    unit_details()
-
-    gauge_data_list = [20, -1, -1, -1, 0]
-    gauge_section(gauge_data_list)
-
-    vitals_value = {
-        "booking": None,
-        "timeLeft": None,
-        "endEpoch": None,
-        "napTime": None,
-        "macId": "ND",
-        "firmware": "ND",
-        "wifiSignal": None,
-        "rfidGain": None,
-        "rfid": "ND",
-        "can": None,
-        "seatSensor": [None, None],
-    }
-    res = node.get_valueStore("vitals")
-    if res.get("isSuccess"):
-        value = res.get("value")
-        vitals_value = json.loads(value)
-        # st.write(vitals_value)
+    unit_details(NODE_ID)
+    gauge_section(node)
     # cards_section(vitals_value)
-
     # controllers_section(node)
-
     graph_section(node)
     # map_section(node)
 
