@@ -9,6 +9,9 @@ def initialize_session_state():
     if "user_permissions" not in st.session_state:
         st.session_state.user_permissions = []
 
+    if "user_variables_access" not in st.session_state:
+        st.session_state.user_variables_access = []
+
     # ========= Project Controller ================
     if "create_pages" not in st.session_state:  
         st.session_state.create_pages = False

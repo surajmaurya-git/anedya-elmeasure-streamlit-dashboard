@@ -86,7 +86,7 @@ def edits_user_ui():
         edit_key = st.multiselect(
             "Select Credentials",
             placeholder="Select Credentials",
-            options=["Name", "Password", "Permissions"],
+            options=["Name", "Password", "Permissions", "Variables Access"],
         )
 
         edit_req_payload = {}
@@ -105,6 +105,14 @@ def edits_user_ui():
                     options.append(f"{NODES_NAME}-{i}")
                 permissions = st.pills("Permissions", options, selection_mode="multi")
                 edit_req_payload["permissions"] = permissions
+            if "Variables Access" in edit_key:
+                vars_options=[]
+                VARIABLES = st.session_state.variables
+                for key, variable in VARIABLES.items():
+                    variable_name = variable.get('name')
+                    vars_options.append(variable_name)
+                variables_access = st.pills("Variables Access", vars_options, selection_mode="multi")
+                edit_req_payload["variables_access"] = variables_access
             submit_button = st.form_submit_button(label="Submit")
             if submit_button:
                 if email == "":

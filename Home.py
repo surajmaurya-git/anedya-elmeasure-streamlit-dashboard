@@ -90,7 +90,7 @@ def check_credentials(username,password):
           name="Super Admin"
           password="admin"
           permissions=["ALL"]
-          st.session_state.firestore_client.collection("users").document(email).set({"name":name,"role":"admin","email":email,"password":password,"permissions":permissions},merge=True)
+          st.session_state.firestore_client.collection("users").document(email).set({"name":name,"role":"admin","email":email,"password":password,"permissions":permissions,"variables_access":['ALL']},merge=True)
 
     user_details = st.session_state.firestore_client.collection("users").document(username).get().to_dict()
     if user_details is None:
@@ -107,6 +107,7 @@ def check_credentials(username,password):
     elif user_details["role"] == "user":
         st.session_state.view_role = "user"
         st.session_state.user_permissions = user_details["permissions"]
+        st.session_state.user_variables_access = user_details["variables_access"]
         st.session_state.LoggedIn = True
         st.rerun()
 

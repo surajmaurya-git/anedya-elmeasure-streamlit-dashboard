@@ -240,8 +240,12 @@ def graph_section(node_client=None):
 
         VARIABLES=st.session_state.variables
         options:list=[]
+        user_variables_access = st.session_state.user_variables_access
         if st.session_state.view_role == "user":
-            options=["Battery Voltage","Unit Battery SoC","Flask Average Temperature","Ambient Temperature"]
+            for key, variable in VARIABLES.items():
+                variable_name = variable.get('name')
+                if variable_name in user_variables_access:
+                    options.append(variable_name)
         else:
             for key, variable in VARIABLES.items():
                 variable_name = variable.get('name')

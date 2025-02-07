@@ -33,7 +33,7 @@ def draw_unit_1_dashboard():
     )
     unit_details(NODE_ID)
     gauge_section(node)
-    # cards_section(vitals_value) 
+    # cards_section(vitals_value)
     # controllers_section(node)
     graph_section(node)
     map_section(node)
