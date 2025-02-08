@@ -1,4 +1,4 @@
-# anedya-uP-streamlit-dashboard
+# anedya-elmeasure-streamlit-dashboard
 
 ## Project Setup Instructions
 
