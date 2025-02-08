@@ -265,8 +265,13 @@ def graph_section(node_client=None):
                     VARIABLE_KEY = get_variable_key_by_name(VARIABLES, chart)
                     if VARIABLE_KEY is not None:
                         VARIABLE = VARIABLES.get(VARIABLE_KEY)
+                        maxValue = 0
+                        minValue = 0
                         data = node_client.get_data(VARIABLE.get("identifier"), pastHour_Time, currentTime)
-                        draw_chart(chart_title=chart, chart_data=data, y_axis_title=VARIABLE.get("unit"), bottomRange=VARIABLE.get("bottom_range"), topRange=VARIABLE.get("top_range"))
+                        if data is not None and not data.empty:
+                            maxValue = data.max().get("value")
+                            minValue = data.min().get("value")
+                        draw_chart(chart_title=chart, chart_data=data, y_axis_title=VARIABLE.get("unit"), bottomRange=minValue, topRange=maxValue)
                     else:
                         st.subheader(chart)
                         st.error("Variable not found")
